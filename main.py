@@ -1,3 +1,11 @@
+'''
+File: main.py
+Description: This is the main part of the programming and contains assignment 2 for OOP.
+Author: Riley D'Onise
+StudentID: 110409464
+EmailID: donry019
+This is my own work as defined by the University's Academic Misconduct Policy.
+'''
 from abc import ABC, abstractmethod
 
 
@@ -13,10 +21,10 @@ class Alchemist:
         self.__recipes = {}
 
     def getLaboratory(self):
-        pass
+        return self.__laboratory
 
     def getRecipes(self):
-        pass
+        return self.__recipes
 
     def mixPotion(self,recipe):
         pass
@@ -54,13 +62,13 @@ class Potion(ABC):
         pass
 
     def getName(self):
-        pass
+        return self.__name
 
     def getStat(self):
-        pass
+        return self.__stat
 
     def getBoost(self):
-        pass
+        return self.__boost
 
     def setBoost(self,boost):
         pass
@@ -75,24 +83,24 @@ class SuperPotion(Potion):
         pass
     
     def getHerb(self):
-        pass
+        return self.__herb
 
     def getCatalyst(self):
-        pass
+        return self.__catalyst
 
 class ExtremePotion(Potion):
     def __init__(self,reagent, potion):
-        self.__regeant = reagent
+        self.__reagent = reagent
         self.__potion = potion
 
     def calculateBoost(self):
         pass
 
     def getReagent(self):
-        pass
+        return self.__reagent
 
     def getPotion(self):
-        pass
+        return self.__potion
 
 
 class Reagent(ABC):
@@ -105,13 +113,14 @@ class Reagent(ABC):
         pass
 
     def getName(self):
-        pass
+        return self.__name
 
     def getPotency(self):
-        pass
+        return self.__potency
 
     def setPotency(self):
         pass
+
 class Herb(Reagent):
     def __init__(self):
         self.__grimy = True
@@ -120,7 +129,7 @@ class Herb(Reagent):
         pass
 
     def getGrimy(self):
-        pass
+        return self.__grimy
 
     def setGrimy(self):
         pass
@@ -133,4 +142,4 @@ class Catalyst(Reagent):
         pass
     
     def getQuality(self):
-        pass
+        return self.__quality
