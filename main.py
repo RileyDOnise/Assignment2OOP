@@ -19,7 +19,7 @@ class Alchemist:
         self.__ranged = ranged
         self.__necromancy = necromancy
         self.__laboratory = laboratory
-        self.__recipes = {}
+        self.__recipes = {"Super Attack": "Irit, Eye_of_Newt","Super Strength": "Kwuarm, Limpwurt_Root","Super Defence": "Cadantine,White_Berries","Super Magic":"Lantadyme,Potato_Cactis","Super Ranging":"Dwaft_weed,Wine_Of_Zamorak","Super Necromancy": "Arbuck,Blood_of_Orcus"}
 
     def getLaboratory(self):
         return self.__laboratory
@@ -40,10 +40,10 @@ class Alchemist:
         pass
 
 class Laboratory:
-    def __init__(self, potion, herbs, catalysts):
-        self.__potions = potion
-        self.__herbs = herbs
-        self.__catalysts = catalysts
+    def __init__(self):
+        self.__potions = []
+        self.__herbs = []
+        self.__catalysts = []
 
     def mixPotion(self,name,stat,primaryIngredient,secondaryIngredient):
         pass
@@ -72,7 +72,7 @@ class Potion(ABC):
         return self.__boost
 
     def setBoost(self,boost):
-        pass
+        self._boost = boost
 
 
 class SuperPotion(Potion):
@@ -119,28 +119,35 @@ class Reagent(ABC):
     def getPotency(self):
         return self.__potency
 
-    def setPotency(self):
-        pass
+    def setPotency(self, potency):
+        self.__potency = potency
 
 class Herb(Reagent):
     def __init__(self):
         self.__grimy = True
 
     def refine(self):
-        pass
+        self.__potency = self.__potency * 2.5
+        self.__grimy = False
 
     def getGrimy(self):
         return self.__grimy
 
-    def setGrimy(self):
-        pass
+    def setGrimy(self,grimy):
+        self.__grimy = grimy
+        
 
 class Catalyst(Reagent):
     def __init__(self, quality):
         self.__quality = quality
     
     def refine(self):
-        pass
-    
+        if self.__quality < 8.9:
+            self.__quality = self.__quality * 1.1
+            print(f"The quality is now: {self.__quality}")
+        else:
+            self.__quality = 10
+            print(f"The quality is now {self.__quality} and cannot be refined any further")
+
     def getQuality(self):
         return self.__quality
