@@ -3,7 +3,7 @@ import unittest
 
 class testAddingReagentLab(unittest.TestCase):
 #testing that herbs go into labatory
-    def test_adding_herbs(self):
+    def testAddingHerbs(self):
         laboratory = main.Laboratory()
         herb = main.Herb("Irit",1.0)
         laboratory.addReagent(herb,1)
@@ -18,4 +18,17 @@ class testAddingReagentLab(unittest.TestCase):
 
 
 
+class testPotionMixing(unittest.TestCase):
+    
+    def testPotionMixing(self):
+        laboratory = main.Laboratory
+        alchemist = main.Alchemist(1.0,1.0,1.0,1.0,1.0,1.0,laboratory)
+        herb1 = main.Herb("Irit",1)
+        catalyst1 = main.Catalyst("Eye Of Newt",4.3,1)
+        laboratory.addReagent(self,herb1,1)
+        laboratory.addReagent(self,catalyst1, 1)
+        alchemist.mixPotion("Super Attack","Attack",herb1,catalyst1)
+        self.assertEqual(laboratory.getPotions(),['Super Attack'])
+
 unittest.main()
+
