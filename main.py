@@ -38,10 +38,10 @@ class Alchemist:
     def getRecipes(self):
         return self.__recipes
 
-    def mixPotion(self,recipe):
+    def mixPotion(self,recipe,stat,primaryIngredient,secondaryIngredient):
         for i in self.__recipes:
-            if self.__recipes[i] == recipe:
-               pass
+            if i == recipe:
+               self.__laboratory.mixPotion(recipe,stat,0,primaryIngredient,secondaryIngredient)
 
     def drinkPotion(self,potion):
         pass
@@ -67,22 +67,37 @@ class Laboratory:
                                 "Ground Miasma Rune": [3.3,5.2]}
 
     def mixPotion(self,name,stat,primaryIngredient,secondaryIngredient):
-        
+        if primaryIngredient in self.__herbs or primaryIngredient in self.__catalysts:
+            if secondaryIngredient in self.__catalysts:
+                SuperPotion(name, stat, 0,primaryIngredient,secondaryIngredient)
+                tempBoost = self.__potions[len(self.__potions)].calculateBoost()
+                self.__potions[len(self.__potions)].setBoost(tempBoost)
+            if secondaryIngredient in self.__potions:
+                self.__potions.append(ExtremePotion(name,stat,0,primaryIngredient,secondaryIngredient))
+                tempBoost = self.__potions[len(self.__potions)].calculateBoost()
+                self.__potions[len(self.__potions)].setBoost(tempBoost)
 
+#adds the reagent to the apporiate list
     def addReagent(self, reagent, amount):
         if reagent.getName() in self.__herbStats:
             for i in range(amount):
                 self.__herbs.append(reagent)
+                
         elif reagent.getName() in self.__catalystsNames:
             for i in range(amount):
                 self.__catalysts.append(reagent)
 
+#returns all the objects in __herbs list
     def getHerbs(self):
         return ([x.getName() for x in self.__herbs])
-
+    
+#returns all the objects in __catalysts list
     def getCatalysts(self):
         return ([x.getName() for x in self.__catalysts])
         
+#returns all objects in the __potions list
+    def getPotions(self):
+        return([x.getName() for x in self.__potions])
 
 class Potion(ABC):
     def __init__(self, name, stat, boost):
@@ -94,15 +109,19 @@ class Potion(ABC):
     def calculateBoost(self):
         pass
 
+#returns name of the potion
     def getName(self):
         return self.__name
 
+#returns stat of the potion
     def getStat(self):
         return self.__stat
 
+#returns the boost of the potion
     def getBoost(self):
         return self.__boost
 
+#sets the boost of the potion
     def setBoost(self,boost):
         self._boost = boost
 
