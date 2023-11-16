@@ -19,11 +19,11 @@ class Alchemist:
         self.__ranged = ranged
         self.__necromancy = necromancy
         self.__laboratory = laboratory
-        self.__recipes = {"Super Attack": ["Irit, Eye of Newt"],
-    "Super Strength": ["Kwuarm, Limpwurt Root"],
+        self.__recipes = {"Super Attack":["Irit","Eye of Newt"],
+    "Super Strength": ["Kwuarm","Limpwurt Root"],
     "Super Defence": ["Cadantine", "White Berries"],
-    "Super Magic":["Lantadyme,Potato Cactus"],
-    "Super Ranging":["Dwaft_weed,Wine Of Zamorak"],
+    "Super Magic":["Lantadyme","Potato Cactus"],
+    "Super Ranging":["Dwaft weed","Wine Of Zamorak"],
     "Super Necromancy": ["Arbuck","Blood Of Orcus"],
     "Extreme Attack":["Avanoe","Super Attack"],
     "Extreme Strength":["Dwarf Weed","Super Strength"],
@@ -41,10 +41,25 @@ class Alchemist:
     def mixPotion(self,recipe,stat,primaryIngredient,secondaryIngredient):
         for i in self.__recipes:
             if i == recipe:
-               self.__laboratory.mixPotion(recipe,stat,0,primaryIngredient,secondaryIngredient)
+                if primaryIngredient.getName() in self.__recipes[i] and secondaryIngredient.getName() in self.__recipes[i]: 
+                    self.__laboratory.mixPotion(recipe,stat,primaryIngredient,secondaryIngredient)
 
     def drinkPotion(self,potion):
-        pass
+        stat = potion.getStat()
+        boost = potion.getBoost()
+        if stat == "Attack":
+            self.__attack = self.__attack + boost
+        elif stat == "strength":
+            self.__strength = self.__strength + boost
+        elif stat == "defense":
+            self.__defense = self.__defense + boost
+        elif stat == "Magic":
+            self.__magic = self.__magic + boost
+        elif stat == "ranged":
+            self.__ranged = self.__ranged + boost
+        elif stat == "Necormancy":
+            self.__necromancy = self.__necromancy + boost
+
 
     def collectRaegent(self,reagent,amount):
         pass
@@ -68,14 +83,29 @@ class Laboratory:
 
     def mixPotion(self,name,stat,primaryIngredient,secondaryIngredient):
         if primaryIngredient in self.__herbs or primaryIngredient in self.__catalysts:
+            
             if secondaryIngredient in self.__catalysts:
-                SuperPotion(name, stat, 0,primaryIngredient,secondaryIngredient)
-                tempBoost = self.__potions[len(self.__potions)].calculateBoost()
-                self.__potions[len(self.__potions)].setBoost(tempBoost)
-            if secondaryIngredient in self.__potions:
-                self.__potions.append(ExtremePotion(name,stat,0,primaryIngredient,secondaryIngredient))
-                tempBoost = self.__potions[len(self.__potions)].calculateBoost()
-                self.__potions[len(self.__potions)].setBoost(tempBoost)
+                newPotion = SuperPotion(name,stat,0,primaryIngredient,secondaryIngredient)
+                self.__potions.append(newPotion)
+                tempBoost = self.__potions[len(self.__potions)-1].calculateBoost()
+                self.__potions[len(self.__potions)-1].setBoost(tempBoost)
+                
+                if primaryIngredient in self.__herbs:
+                    self.__herbs.remove(primaryIngredient)
+                else:
+                    self.__catalysts.remove(primaryIngredient)
+                if secondaryIngredient in self.__herbs:
+                    self.__herbs.remove(secondaryIngredient)
+                else:
+                    self.__catalysts.remove(secondaryIngredient)
+                return newPotion
+
+        else:
+            newPotion = ExtremePotion(name,stat,0,primaryIngredient,secondaryIngredient)
+            self.__potions.append(newPotion)
+            tempBoost = self.__potions[len(self.__potions)-1].calculateBoost()
+            self.__potions[len(self.__potions)-1].setBoost(tempBoost)
+            return newPotion
 
 #adds the reagent to the apporiate list
     def addReagent(self, reagent, amount):
@@ -127,12 +157,12 @@ class Potion(ABC):
 
 class SuperPotion(Potion):
     def __init__(self,name,stat,boost,herb, catalyst):
-        super().__init__(self,name,stat,boost)
+        super().__init__(name,stat,boost)
         self.__herb = herb
         self.__catalyst = catalyst
 
     def calculateBoost(self):
-        return round((self.__herb.getPotency() + (self.__catalyst.__potency * self.__catalyst.__quality) * 1.5) ,2)
+        return round((self.__herb.getPotency() + (self.__catalyst.getPotency()* self.__catalyst.getQuality() * 1.5)) ,2)
     
     def getHerb(self):
         return self.__herb
@@ -141,16 +171,16 @@ class SuperPotion(Potion):
         return self.__catalyst
 
     def getBoost(self):
-        return self.__boost
+        return self._Potion__boost
 
 class ExtremePotion(Potion):
     def __init__(self,name,stat,boost,reagent, potion):
-        super().__init__(self,name,stat,boost)
+        super().__init__(name,stat,boost)
         self.__reagent = reagent
         self.__potion = potion
 
     def calculateBoost(self):
-        return round((self.__reagent.getpotency() * self.__potion.__getBoost())*3, 2)
+        return round((self.__reagent.getPotency() * self.__potion.calculateBoost())*3, 2)
 
     def getReagent(self):
         return self.__reagent
@@ -209,8 +239,3 @@ class Catalyst(Reagent):
     def getQuality(self):
         return self.__quality
 
-laboratory = Laboratory()
-alchemist = Alchemist(1.0,1.0,1.0,1.0,1.0,1.0,laboratory)
-herb1 = Herb("Irit",1.0)
-laboratory.addReagent(herb1,1)
-laboratory.getHerbs()
