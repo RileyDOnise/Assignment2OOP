@@ -41,25 +41,31 @@ class Alchemist:
     def mixPotion(self,recipe,stat,primaryIngredient,secondaryIngredient):
         for i in self.__recipes:
             if i == recipe:
-                if primaryIngredient.getName() in self.__recipes[i] and secondaryIngredient.getName() in self.__recipes[i]: 
-                    self.__laboratory.mixPotion(recipe,stat,primaryIngredient,secondaryIngredient)
+                #if primaryIngredient.getName() in self.__recipes[i] and secondaryIngredient.getName() in self.__recipes[i]: 
+                self.__laboratory.mixPotion(recipe,stat,primaryIngredient,secondaryIngredient)
 
     def drinkPotion(self,potion):
         stat = potion.getStat()
-        boost = potion.getBoost()
+        boost = potion.calculateBoost()
         if stat == "Attack":
             self.__attack = self.__attack + boost
-        elif stat == "strength":
+        elif stat == "Strength":
             self.__strength = self.__strength + boost
-        elif stat == "defense":
+        elif stat == "Defense":
             self.__defense = self.__defense + boost
         elif stat == "Magic":
             self.__magic = self.__magic + boost
-        elif stat == "ranged":
+        elif stat == "Ranged":
             self.__ranged = self.__ranged + boost
         elif stat == "Necormancy":
             self.__necromancy = self.__necromancy + boost
+        else:
+            #raise exception here
+            pass
 
+    #method is used for testing
+    def getAttack(self):
+        return self.__attack
 
     def collectRaegent(self,reagent,amount):
         pass
@@ -153,7 +159,7 @@ class Potion(ABC):
 
 #sets the boost of the potion
     def setBoost(self,boost):
-        self._boost = boost
+        self.__boost = boost
 
 class SuperPotion(Potion):
     def __init__(self,name,stat,boost,herb, catalyst):
@@ -180,6 +186,7 @@ class ExtremePotion(Potion):
         self.__potion = potion
 
     def calculateBoost(self):
+                        #3.0                        7.45
         return round((self.__reagent.getPotency() * self.__potion.calculateBoost())*3, 2)
 
     def getReagent(self):
