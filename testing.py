@@ -10,26 +10,26 @@ This is my own work as defined by the University's Academic Misconduct Policy.
 '''
 
 
-import main
-import unittest
+import main #importing main files
+import unittest #importing unit test module
 
 class testAddingReagentLab(unittest.TestCase):
 #testing that herbs go into labatory
-    def testAddingHerbs(self):
+    def testAddingHerbs(self): # function that tests the adding of herbs to the laboratory
         laboratory = main.Laboratory()
         herb = main.Herb("Irit",1.0)
         laboratory.addReagent(herb,1)
         self.assertEqual(laboratory.getHerbs(),['Irit'])
 
 #testing that catalysts go into the laboratory
-    def testAddingCatalysts(self):
+    def testAddingCatalysts(self): #function that tests the adding of catalysts to the laboratory
         laboratory = main.Laboratory()
         catalyst = main.Catalyst("Eye of Newt",1.0,4.0)
         laboratory.addReagent(catalyst,1)
         self.assertEqual(laboratory.getCatalysts(),['Eye of Newt'])
 
 class testPotionMixing(unittest.TestCase):
-    def testSuperPotionMixing(self):
+    def testSuperPotionMixing(self): # tests the mixing of super potions
         laboratory = main.Laboratory()
         alchemist = main.Alchemist(1.0,1.0,1.0,1.0,1.0,1.0,laboratory)
         herb = main.Herb("Irit",1.0)
@@ -39,7 +39,7 @@ class testPotionMixing(unittest.TestCase):
         alchemist.mixPotion("Super Attack","Attack",herb,catalyst)
         self.assertEqual(laboratory.getPotions(),['Super Attack'])
 
-    def testExtremePotionMixing(self):
+    def testExtremePotionMixing(self): #tests the mixing of extreme potions
         laboratory = main.Laboratory()
         alchemist = main.Alchemist(1.0,1.0,1.0,1.0,1.0,1.0,laboratory)
         herb = main.Herb("Irit",1.0)
@@ -52,7 +52,7 @@ class testPotionMixing(unittest.TestCase):
         alchemist.mixPotion("Extreme Attack", "Attack",herb2,potion)   
 class testDrinkPotion(unittest.TestCase):
     
-    def testSuperPotionDrink(self):
+    def testSuperPotionDrink(self): #tests the super potion drinking and the stats which are being applied
         laboratory = main.Laboratory
         alchemist = main.Alchemist(1.0,1.0,1.0,1.0,1.0,1.0,laboratory)
         herb = main.Herb("Irit",1)
@@ -61,7 +61,7 @@ class testDrinkPotion(unittest.TestCase):
         alchemist.drinkPotion(potion)
         self.assertEqual(alchemist.getAttack(),8.45)
 
-    def testExtremePotionDrink(self):
+    def testExtremePotionDrink(self): #tests the extreme potion drinking method and that the correct stats are being applied
         laboratory = main.Laboratory
         alchemist = main.Alchemist(1.0,1.0,1.0,1.0,1.0,1.0,laboratory)
         herb = main.Herb("Irit",1)
@@ -75,14 +75,14 @@ class testDrinkPotion(unittest.TestCase):
 
 class testAddingReagent(unittest.TestCase):
         
-        def testCollectingHerb(self):
+        def testCollectingHerb(self): #tests the collect reagent function in the alchemist class and adding it to the laboratory 
             laboratory = main.Laboratory()
             alchemist = main.Alchemist(1.0,1.0,1.0,1.0,1.0,1.0,laboratory)
             herb = main.Herb("Irit",1)
             alchemist.collectRaegent(herb,1)
             self.assertEqual(laboratory.getHerbs(),['Irit'])
 
-        def testCollectMultipleCatalyst(self):
+        def testCollectMultipleCatalyst(self): #tests the adding of mulitple reagents to the laboratory
             laboratory = main.Laboratory()
             alchemist = main.Alchemist(1.0,1.0,1.0,1.0,1.0,1.0,laboratory)
             catalyst = main.Catalyst("Eye of Newt",4.3,1)
@@ -93,7 +93,7 @@ class testAddingReagent(unittest.TestCase):
 
 class testRefining(unittest.TestCase):
 
-    def testRefineCatalysts(self):
+    def testRefineCatalysts(self): # tests the refine methods are working correctly
         laboratory = main.Laboratory()
         alchemist = main.Alchemist(1.0,1.0,1.0,1.0,1.0,1.0,laboratory)
         catalyst = main.Catalyst("Eye of Newt",4.3,1)
@@ -104,7 +104,7 @@ class testRefining(unittest.TestCase):
         self.assertEqual(catalyst2.getQuality(),2.2)
 
 
-unittest.main()
+unittest.main() #calls the unittest module and conducts the tests on the functions specified above
 
 
 

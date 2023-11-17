@@ -87,7 +87,6 @@ refineReagent(self)
     def mixPotion(self,recipe,stat,primaryIngredient,secondaryIngredient):
         for i in self.__recipes:
             if i == recipe:
-                #if primaryIngredient.getName() in self.__recipes[i] and secondaryIngredient.getName() in self.__recipes[i]: 
                 self.__laboratory.mixPotion(recipe,stat,primaryIngredient,secondaryIngredient)
 
     def drinkPotion(self,potion):
