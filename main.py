@@ -13,6 +13,50 @@ from abc import ABC, abstractmethod
 
 
 class Alchemist:
+    """
+A class that represents a Alchemist
+
+Attributes
+----------------
+attack: int
+    assigned at declaration is the attack stat of the alchemist
+strength: int
+    assigned at declaration is the strength stat of the alchemist
+defense: int
+    assigned at declartion is the defense stat of the alchemist
+magic: int
+    assigned at declaration is the magic stat of the alchemist
+ranged: int
+    assigned at delcartion is the range stat of the alchemsit
+necormancy: int
+    assigned at declartion is the necromany stat of the alchemist
+laboratory: Laboratory
+    is the laboratory which the alchemist is associated with.
+
+Methods
+---------------
+getLaboratory(self)
+    returns the laboratory which was assigned to alchemist at declaration of the alchemist class
+
+getRecipes(self)
+    returns a list of the potion recipes avaliable with the key being the name and the value being the ingredients
+
+mixPotion(self,recipe,stat,primaryIngredient,secondaryIngredient)
+    makes sure that the recipe exsists and calls the mix potion function from Laboratory Class
+
+getAttack(self)
+    returns the attack stat(used in the testing)
+
+drinkPotion(self, potion)
+    alchemist drinks potion and adjusts the stats of the alchemist accordingly
+
+collectReagent(self, reagent,amount)
+    uses the addReagent function from laboratory to assign them to the correct list
+
+refineReagent(self)
+    calls the refine function from the Potion classes which increase the potency or quality depending on type of potion
+"""
+
     def __init__(self, attack,strength,defense,magic,ranged,necromancy,laboratory):
         self.__attack = attack
         self.__strength = strength
@@ -71,12 +115,41 @@ class Alchemist:
 
     def refineRaegent(self):
         for i in self.__laboratory.getHerbs():
-            refinedHerb  = i.refine()
-            i.setPotency()
+            i.refine()
         for i in self.__laboratory.getCatalysts():
             i.refine()
 
 class Laboratory:
+
+    """
+    A class which represents a laboratory
+
+    Attributes
+    potions: list
+        intially empty is used to store the potions which have been created using collectReagent from alchemist
+    herbs: list
+        intially empty is used to store the herbs which have been collected using collectReagent from alchemist
+    catalysts
+        intially empty is used to store the catalysts which have been collected using collectReagent from alchemist
+    
+    Methods
+
+    mixPotion(self,name,stat,primaryIngredient,secondaryIngredient)
+        is called, checks if the ingredients have been collect and appened to the apportiate list, creates a instance of the apporiate type of potion and appends it to the apporiate list
+    
+    addReagent(self,reagent,amount)
+        adds a reagent object to the apporiate list (herbs/catalysts)
+    
+    getHerbs(self)
+        returns the herbs list
+
+    getCatalysts(self)
+        returns the catalysts list
+
+    getPotions(self)
+        returns the potions list
+
+    """
     statNames = ["Attack","Strength","Defense","Magic","Ranged","Necormancy"]
     def __init__(self):
         self.__potions = []
@@ -143,6 +216,33 @@ class Laboratory:
         return([x.getName() for x in self.__potions])
 
 class Potion(ABC):
+    """
+    Potion is a abstract class which the base for creating potions
+
+    attributes
+    ------------
+    name: str
+        the name of the potion
+    stat: str
+        the stat which the potion increases
+    boost: float
+        the amount which the stat is boosted by
+
+    methods
+    -----------
+    calculateBoost(self)
+        is a abstract class that is used in the superPotion and extremePotion classes ensures that a calculate boost method is defined
+    
+    getName(self)
+        returns the name of the potion
+    
+    getStat(self)
+        returns the stat which the potion boosts
+
+    getBoost
+        returns the amount the stat will be boosted by    
+    """
+
     def __init__(self, name, stat, boost):
         self.__name = name
         self.__stat = stat
@@ -169,6 +269,37 @@ class Potion(ABC):
         self.__boost = boost
 
 class SuperPotion(Potion):
+    """
+    Is a child class of Potion and Inherits the name, stat and boost attributes.
+
+    Attributes
+    -------------
+    name: str
+        name of the potion
+    stat: str
+        the stat which will be boosted by the potion
+    boost: float
+        how much the stat will be boosted by
+    herb: Herb
+        the herb which is used to create the potion
+    catalyst: Catalyst
+        the catalyst which is used to create the potion
+    Methods
+    ----------
+    calculateBoost(self)
+        calculates the amount a stat will be boosted using the potency of the catalyst and herb and the quality of the catalysts
+    
+    getHerb
+        returns the herb which has been used in the potion
+    
+    getCatalyst(self)
+        returns the catalyst which has been used in the potion
+
+    getBoost(self)
+        returns the boost value which was calculated using calculateBoost method
+    
+    """
+
     def __init__(self,name,stat,boost,herb, catalyst):
         super().__init__(name,stat,boost)
         self.__herb = herb
@@ -187,6 +318,34 @@ class SuperPotion(Potion):
         return self._Potion__boost
 
 class ExtremePotion(Potion):
+    """
+    Is a child class of Potion and Inherits the name, stat and boost attributes.
+
+    Attributes
+    -------------
+    name: str
+        name of the potion
+    stat: str
+        the stat which will be boosted by the potion
+    boost: float
+        how much the stat will be boosted by
+    reagent: Reagent
+        the Reagent which is used to create the potion
+    potion: Potion
+        the potion which is used to create the potion
+
+    Methods
+    ----------
+    calculateBoost(self)
+        using the reagentPotency and the potion boost calculates the boost of the extreme potion
+        
+    getReagent(self)
+        returns the Reagent which is used in the potion
+
+    getPotion(self)
+        returns the potion whcih is used in the potion
+        """
+
     def __init__(self,name,stat,boost,reagent, potion):
         super().__init__(name,stat,boost)
         self.__reagent = reagent
@@ -204,6 +363,32 @@ class ExtremePotion(Potion):
 
 
 class Reagent(ABC):
+
+    """
+    is the abstract class which is used when creating herbs and catalysts
+
+    attributes
+    ----------
+    name: str
+        the name of the reagent
+    potency: float
+        the strenght of the reagent used in calculating the boost of potions
+    
+    Methods
+    ---------
+    refine(self)
+        abstract method which is used to refine the reagents in herb and catalysts classes
+    
+    getName(self)
+        returns the name of the reagent
+    
+    getPotency(self)
+        returns the potency of the reagent
+    
+    setPotency(self, potency)
+        sets the potency value to a value which is specified by the user
+    
+    """
     def __init__(self, name, potency):
         self.__name = name
         self.__potency = potency
@@ -222,6 +407,30 @@ class Reagent(ABC):
         self.__potency = potency
 
 class Herb(Reagent):
+
+    """
+    is the abstract class which is used when creating herbs and catalysts
+
+    attributes
+    ----------
+    name: str
+        the name of the reagent
+    potency: float
+        the strenght of the reagent used in calculating the boost of potions
+    
+    Methods
+    ---------
+    refine(self)
+        calculates the refined  potency of the herb using the previous potency value    
+
+    getGrimy(self)
+        returns the grimy value
+    
+    setGrimy(self,grimy)
+        sets the grimy value to the grimy value provided by the user
+        
+    """
+    
     def __init__(self,name,potency):
         super().__init__(name,potency)
         self.__grimy = True
@@ -238,6 +447,28 @@ class Herb(Reagent):
         
 
 class Catalyst(Reagent):
+    
+    """
+    is the abstract class which is used when creating herbs and catalysts
+
+    attributes
+    ----------
+    name: str
+        the name of the catalyst
+    potency: float
+        the strenght of the catalyst used in calculating the boost of potions
+    quality: float
+        the quality of catalyst used to calculate boosts and potion values
+        
+    Methods
+    ---------
+    refine(self)
+        uses the quality of catalyst to calculate the regined quality
+
+    getQuality(self)
+        returns the quality value of the catalyst and used to calcualate boost values
+        """
+
     def __init__(self,name,potency, quality):
         super().__init__(name,potency)
         self.__quality = quality
@@ -252,7 +483,3 @@ class Catalyst(Reagent):
     
     def getQuality(self):
         return self.__quality
-
-
-
-#exceptions
