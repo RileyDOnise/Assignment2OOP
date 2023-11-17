@@ -1,6 +1,8 @@
 '''
 File: main.py
-Description: This is the main part of the programming and contains assignment 2 for OOP.
+Description: A part of a greater application in which is about Alchemists, laboratories and potion. alehcmistist have many functions such as
+mixing potions,drinking potions, foraging reagents and refining regeants. alchemist also have stats which can be boost by drinking potions. The potions
+are created in a laboratory by a alchemist. in the laboratory the correct ingredients are identified and the potion creation methods are called.
 Author: Riley D'Onise
 StudentID: 110409464
 EmailID: donry019
@@ -59,21 +61,23 @@ class Alchemist:
             self.__ranged = self.__ranged + boost
         elif stat == "Necormancy":
             self.__necromancy = self.__necromancy + boost
-        else:
-            #raise exception here
-            pass
 
     #method is used for testing
     def getAttack(self):
         return self.__attack
 
     def collectRaegent(self,reagent,amount):
-        pass
+        self.__laboratory.addReagent(reagent,amount)
 
     def refineRaegent(self):
-        pass
+        for i in self.__laboratory.getHerbs():
+            refinedHerb  = i.refine()
+            i.setPotency()
+        for i in self.__laboratory.getCatalysts():
+            i.refine()
 
 class Laboratory:
+    statNames = ["Attack","Strength","Defense","Magic","Ranged","Necormancy"]
     def __init__(self):
         self.__potions = []
         self.__herbs = []
@@ -81,11 +85,12 @@ class Laboratory:
         #Key: name, Value: potency
         self.__herbStats = {"Arbuck": 2.6, "Avantoe": 3.0,"Cadantine":1.5,"Dwarf Weed": 2.5,"Irit":1.0,"Kwuarm": 1.2,"Lantadyme": 2.0,"Torstol": 4.5}
         #Key: name list[0]: potency, list[1]: quality
-        self.__catalystsNames = {"Eye Of Newt": [4.3,1.0], "Limpwurt Root": [3.6,1.7],
+        self.__catalystsNames = {"Eye of Newt": [4.3,1.0], "Limpwurt Root": [3.6,1.7],
                                 "White Berries": [1.2,2.0],"Potato Cactus": [7.3,0.1],
                                 "Wine Of Zamorak": [1.7, 5.0],"Blood Of Orcus": [4.5,2.2],
                                 "Ground Mud Rune": [2.1,6.7],"Grenwall Spike":[6.3,4.9], 
                                 "Ground Miasma Rune": [3.3,5.2]}
+        
 
     def mixPotion(self,name,stat,primaryIngredient,secondaryIngredient):
         if primaryIngredient in self.__herbs or primaryIngredient in self.__catalysts:
@@ -106,19 +111,21 @@ class Laboratory:
                     self.__catalysts.remove(secondaryIngredient)
                 return newPotion
 
-        else:
-            newPotion = ExtremePotion(name,stat,0,primaryIngredient,secondaryIngredient)
-            self.__potions.append(newPotion)
-            tempBoost = self.__potions[len(self.__potions)-1].calculateBoost()
-            self.__potions[len(self.__potions)-1].setBoost(tempBoost)
-            return newPotion
+            elif secondaryIngredient in self.__potions:
+                newPotion = ExtremePotion(name,stat,0,primaryIngredient,secondaryIngredient)
+                self.__potions.append(newPotion)
+                tempBoost = self.__potions[len(self.__potions)-1].calculateBoost()
+                self.__potions[len(self.__potions)-1].setBoost(tempBoost)
+                return newPotion
+
+            
 
 #adds the reagent to the apporiate list
     def addReagent(self, reagent, amount):
         if reagent.getName() in self.__herbStats:
             for i in range(amount):
                 self.__herbs.append(reagent)
-                
+        
         elif reagent.getName() in self.__catalystsNames:
             for i in range(amount):
                 self.__catalysts.append(reagent)
@@ -220,8 +227,8 @@ class Herb(Reagent):
         self.__grimy = True
 
     def refine(self):
-        self.__potency = self.__potency * 2.5
-        self.__grimy = False
+        self.setPotency(self.__potency * 2.5)
+        self.setGrimy(False)
 
     def getGrimy(self):
         return self.__grimy
@@ -242,7 +249,10 @@ class Catalyst(Reagent):
         else:
             self.__quality = 10
             print(f"The quality is now {self.__quality} and cannot be refined any further")
-
+    
     def getQuality(self):
         return self.__quality
 
+
+
+#exceptions
