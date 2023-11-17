@@ -1,3 +1,15 @@
+'''
+File: testing.py
+Description: This file is being used to test the main.py file. the main methods are tested which includes the mixing of potions,
+the drinking of potions, adding reagents to the laboratory and the alchemist being able to collect reagents. this ensures the main file
+is always working and reduces the need for manual testinh
+Author: Riley D'Onise
+StudentID: 110409464
+EmailID: donry019
+This is my own work as defined by the University's Academic Misconduct Policy.
+'''
+
+
 import main
 import unittest
 
